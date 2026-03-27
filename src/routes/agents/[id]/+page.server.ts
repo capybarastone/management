@@ -5,10 +5,13 @@ import { randomUUID } from 'node:crypto';
 
 export const load: PageServerLoad = async ({ params }) => {
 	try {
-		const agent = await backend.getAgent(params.id);
-		return { agent, error: null };
+		const [agent, config] = await Promise.all([
+			backend.getAgent(params.id),
+			backend.getCronConfig()
+		]);
+		return { agent, refresh_interval: config.page_refresh_interval, error: null };
 	} catch (e) {
-		return { agent: null, error: String(e) };
+		return { agent: null, refresh_interval: 0, error: String(e) };
 	}
 };
 

@@ -95,9 +95,17 @@ export interface Agent {
 	tasks: Task[];
 }
 
+export interface CronConfig {
+	inventory_interval: number;
+	page_refresh_interval: number;
+}
+
 export const backend = {
 	listAgents: () => request<Agent[]>('GET', '/api/man/agents'),
 	getAgent: (id: string) => request<Agent>('GET', `/api/man/agents/${id}`),
 	postTask: (agentid: string, task: Partial<Task>) =>
-		request<{ status: string }>('POST', '/api/man/post_task', { agentid, task })
+		request<{ status: string }>('POST', '/api/man/post_task', { agentid, task }),
+	getCronConfig: () => request<CronConfig>('GET', '/api/man/cron'),
+	patchCronConfig: (config: Partial<CronConfig>) =>
+		request<CronConfig>('PATCH', '/api/man/cron', config)
 };

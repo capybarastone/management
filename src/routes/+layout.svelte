@@ -4,7 +4,10 @@
 
 	let { children } = $props();
 
-	const navItems = [{ href: '/agents', label: 'Agents' }];
+	const navItems = [
+		{ href: '/agents', label: 'Agents' },
+		{ href: '/settings', label: 'Settings' }
+	];
 </script>
 
 <div class="flex h-screen overflow-hidden bg-background text-foreground">
@@ -12,28 +15,7 @@
 	<aside class="flex w-56 flex-shrink-0 flex-col border-r border-sidebar-border bg-sidebar">
 		<!-- Logo -->
 		<div class="flex items-center gap-3 border-b border-sidebar-border px-4 py-4">
-			<svg
-				viewBox="0 0 60 44"
-				xmlns="http://www.w3.org/2000/svg"
-				class="h-8 w-auto flex-shrink-0 text-brand"
-				fill="currentColor"
-				aria-hidden="true"
-			>
-				<!-- Ear -->
-				<ellipse cx="44" cy="7" rx="5" ry="6" />
-				<!-- Head -->
-				<rect x="34" y="8" width="22" height="18" rx="5" />
-				<!-- Body -->
-				<ellipse cx="21" cy="24" rx="21" ry="12" />
-				<!-- Eye -->
-				<circle cx="50" cy="14" r="2.2" fill="var(--sidebar)" />
-				<!-- Front legs -->
-				<rect x="43" y="33" width="7" height="9" rx="3" />
-				<rect x="32" y="33" width="7" height="9" rx="3" />
-				<!-- Back legs -->
-				<rect x="11" y="33" width="7" height="9" rx="3" />
-				<rect x="1" y="33" width="7" height="9" rx="3" />
-			</svg>
+			<img src="/favicon.svg" alt="Herd" class="h-8 w-8 flex-shrink-0" />
 			<span class="text-lg font-bold tracking-tight text-sidebar-foreground">Herd</span>
 		</div>
 
