@@ -2,7 +2,7 @@
 	import './layout.css';
 	import { page } from '$app/state';
 
-	let { children } = $props();
+	let { children, data } = $props();
 
 	const navItems = [
 		{ href: '/agents', label: 'Agents' },
@@ -35,8 +35,18 @@
 		</nav>
 
 		<!-- Footer -->
-		<div class="border-t border-sidebar-border px-4 py-3 text-xs text-muted-foreground">
-			Herd v0.1
+		<div class="border-t border-sidebar-border px-4 py-3">
+			<form action="/logout" method="POST">
+				<button
+					type="submit"
+					class="flex w-full items-center rounded-md px-3 py-2 text-sm font-medium text-sidebar-foreground/50 transition-colors hover:bg-sidebar-accent/60 hover:text-sidebar-foreground"
+				>
+					Logout
+				</button>
+			</form>
+			<div class="mt-2 text-xs text-muted-foreground">
+				Herd v0.1
+			</div>
 		</div>
 	</aside>
 

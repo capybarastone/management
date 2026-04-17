@@ -6,6 +6,7 @@
 
 	let interval = $derived(data.config.inventory_interval);
 	let refreshInterval = $derived(data.config.page_refresh_interval);
+	let showAddUser = $state(false);
 </script>
 
 <svelte:head>
@@ -81,6 +82,90 @@
 					Save
 				</button>
 			</form>
+		</div>
+
+		<!-- User Management -->
+		<div class="rounded-lg border border-border bg-card p-4">
+			<div class="mb-4 flex items-center justify-between">
+				<div>
+					<h2 class="text-sm font-semibold">User Management</h2>
+					<p class="text-xs text-muted-foreground">Add or remove admin users</p>
+				</div>
+				<button
+					type="button"
+					onclick={() => (showAddUser = !showAddUser)}
+					class="rounded-md bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
+				>
+					{showAddUser ? 'Cancel' : 'Add User'}
+				</button>
+			</div>
+
+			{#if showAddUser}
+				<form method="POST" action="?/addUser" use:enhance class="mb-4 space-y-3 rounded-md border border-border bg-background p-3">
+					{#if form?.userError}
+						<div class="rounded bg-destructive/15 px-3 py-2 text-xs text-destructive">
+							{form.userError}
+						</div>
+					{/if}
+					{#if form?.userSaved}
+						<div class="rounded bg-green-500/15 px-3 py-2 text-xs text-green-400">
+							User created successfully
+						</div>
+					{/if}
+					<div class="grid grid-cols-2 gap-3">
+						<div>
+							<label for="new-username" class="mb-1 block text-xs text-muted-foreground">
+								Username
+							</label>
+							<input
+								id="new-username"
+								name="username"
+								type="text"
+								required
+								class="w-full rounded-md border border-input bg-background px-3 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-ring"
+							/>
+						</div>
+						<div>
+							<label for="new-password" class="mb-1 block text-xs text-muted-foreground">
+								Password
+							</label>
+							<input
+								id="new-password"
+								name="password"
+								type="password"
+								required
+								class="w-full rounded-md border border-input bg-background px-3 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-ring"
+							/>
+						</div>
+					</div>
+					<button
+						type="submit"
+						class="rounded-md bg-primary px-4 py-1.5 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
+					>
+						Create User
+					</button>
+				</form>
+			{/if}
+
+			<div class="space-y-2">
+				{#each data.users as user}
+					<div class="flex items-center justify-between rounded border border-border bg-background px-3 py-2">
+						<div>
+							<span class="text-sm font-medium">{user.username}</span>
+							<span class="ml-2 text-xs text-muted-foreground">Created: {new Date(user.createdAt).toLocaleDateString()}</span>
+						</div>
+						<form method="POST" action="?/deleteUser" use:enhance>
+							<input type="hidden" name="userId" value={user.id} />
+							<button
+								type="submit"
+								class="rounded-md border border-destructive/40 px-2 py-1 text-xs text-destructive hover:bg-destructive/10"
+							>
+								Delete
+							</button>
+						</form>
+					</div>
+				{/each}
+			</div>
 		</div>
 	</div>
 </div>

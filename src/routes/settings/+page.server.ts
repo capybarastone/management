@@ -1,13 +1,16 @@
 import type { Actions, PageServerLoad } from './$types';
 import { fail } from '@sveltejs/kit';
 import { backend } from '$lib/server/backend';
+import { getUsers, createUser, deleteUser } from '$lib/server/auth';
 
 export const load: PageServerLoad = async () => {
 	try {
 		const config = await backend.getCronConfig();
-		return { config, error: null };
+		const users = await getUsers();
+		return { config, users, error: null };
 	} catch (e) {
-		return { config: { inventory_interval: 30, page_refresh_interval: 10 }, error: String(e) };
+		const users = await getUsers().catch(() => []);
+		return { config: { inventory_interval: 30, page_refresh_interval: 10 }, users, error: String(e) };
 	}
 };
 
@@ -34,6 +37,37 @@ export const actions: Actions = {
 			return { saved: true, config };
 		} catch (e) {
 			return fail(500, { error: String(e) });
+		}
+	},
+	addUser: async ({ request }) => {
+		const form = await request.formData();
+		const username = form.get('username')?.toString();
+		const password = form.get('password')?.toString();
+
+		if (!username || !password) {
+			return fail(400, { userError: 'Username and password required' });
+		}
+
+		try {
+			await createUser(username, password);
+			return { userSaved: true };
+		} catch (e) {
+			return fail(400, { userError: e instanceof Error ? e.message : 'Failed to create user' });
+		}
+	},
+	deleteUser: async ({ request }) => {
+		const form = await request.formData();
+		const userId = form.get('userId')?.toString();
+
+		if (!userId) {
+			return fail(400, { userError: 'User ID required' });
+		}
+
+		try {
+			await deleteUser(userId);
+			return { userDeleted: true };
+		} catch (e) {
+			return fail(400, { userError: e instanceof Error ? e.message : 'Failed to delete user' });
 		}
 	}
 };
