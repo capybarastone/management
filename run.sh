@@ -13,8 +13,9 @@ fi
 
 if [[ "${1:-}" == "--prod" ]]; then
 	if [[ ! -d build ]]; then
-		echo "No build/ directory found. Run: npm run build" >&2
-		exit 1
+		#echo "No build/ directory found. Run: npm run build" >&2
+		#exit 1
+		exec npm run build
 	fi
 	exec node build/index.js
 else
