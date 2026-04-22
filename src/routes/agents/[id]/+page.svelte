@@ -53,6 +53,11 @@
 		return isNaN(n) ? null : n;
 	}
 
+	function parseCpuUsagePct(s: string): number | null {
+		const m = s?.trim().match(/^(\d+)%/);
+		return m ? parseInt(m[1]) : null;
+	}
+
 	function gaugeColor(pct: number): string {
 		if (pct >= 85) return 'bg-destructive';
 		if (pct >= 65) return 'bg-yellow-500';
@@ -160,6 +165,7 @@
 					{#if latestInventory}
 						{@const memPct = parseMemoryPct(String(latestInventory.memory_use ?? ''))}
 						{@const diskPct = parseDiskPct(String(latestInventory.disk_usage ?? ''))}
+						{@const cpuUsagePct = parseCpuUsagePct(String(latestInventory.cpu_usage ?? ''))}
 						{@const cpuCount = parseCpuCount(String(latestInventory.cpu_count ?? ''))}
 
 						<div class="space-y-4">
@@ -203,6 +209,27 @@
 										<div
 											class="h-full rounded-full transition-all {gaugeColor(diskPct)}"
 											style="width: {diskPct}%"
+										></div>
+									</div>
+								</div>
+							{/if}
+
+							{#if cpuUsagePct !== null}
+								<div>
+									<div class="mb-1 flex justify-between text-xs">
+										<span class="text-muted-foreground">CPU Usage</span>
+										<span
+											class={cpuUsagePct >= 85
+												? 'text-destructive'
+												: cpuUsagePct >= 65
+													? 'text-yellow-400'
+													: 'text-foreground'}>{cpuUsagePct}%</span
+										>
+									</div>
+									<div class="h-2 overflow-hidden rounded-full bg-muted">
+										<div
+											class="h-full rounded-full transition-all {gaugeColor(cpuUsagePct)}"
+											style="width: {cpuUsagePct}%"
 										></div>
 									</div>
 								</div>
