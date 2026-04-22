@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { PageData, ActionData } from './$types';
 	import { enhance } from '$app/forms';
+	import InstructionPicker from '$lib/components/InstructionPicker.svelte';
 
 	let { data, form }: { data: PageData; form: ActionData } = $props();
 
@@ -235,36 +236,7 @@
 					<input type="hidden" name="agents" value={id} />
 				{/each}
 
-				<div>
-					<label for="modal-instruction" class="mb-1 block text-xs text-muted-foreground">
-						Instruction
-					</label>
-					<select
-						id="modal-instruction"
-						name="instruction"
-						bind:value={modalInstruction}
-						class="w-full rounded-md border border-input bg-background px-3 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-ring"
-					>
-						<option value="syscall">syscall</option>
-						<option value="exit">exit</option>
-					</select>
-				</div>
-
-				{#if modalInstruction === 'syscall'}
-					<div>
-						<label for="modal-arg" class="mb-1 block text-xs text-muted-foreground">
-							Command
-						</label>
-						<input
-							id="modal-arg"
-							name="arg"
-							type="text"
-							bind:value={modalArg}
-							placeholder="e.g. uname -a"
-							class="w-full rounded-md border border-input bg-background px-3 py-1.5 font-mono text-sm focus:outline-none focus:ring-1 focus:ring-ring"
-						/>
-					</div>
-				{/if}
+				<InstructionPicker bind:instruction={modalInstruction} bind:arg={modalArg} idPrefix="modal" />
 
 				<div class="flex gap-2 pt-1">
 					<button
