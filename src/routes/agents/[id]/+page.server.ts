@@ -19,7 +19,7 @@ export const actions: Actions = {
 	dispatch: async ({ request, params }) => {
 		const form = await request.formData();
 		const instruction = String(form.get('instruction') ?? '').trim();
-		const arg = form.get('arg') ? String(form.get('arg')).trim() : null;
+		const arg = form.get('arg') ? String(form.get('arg')).trim() : '';
 
 		if (!instruction) {
 			return fail(400, { error: 'Instruction is required' });
@@ -29,7 +29,7 @@ export const actions: Actions = {
 			task_id: randomUUID(),
 			assigned_at: new Date().toISOString().replace('+00:00', 'Z'),
 			instruction,
-			arg: arg || null
+			arg
 		};
 
 		try {
